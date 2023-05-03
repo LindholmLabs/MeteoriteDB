@@ -1,4 +1,4 @@
-package com.example.networking;
+package com.example.project_assignment;
 
 import android.os.AsyncTask;
 
@@ -40,8 +40,6 @@ public class JsonTask extends AsyncTask<String, String, String> {
                 builder.append(line).append("\n");
             }
             return builder.toString();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
