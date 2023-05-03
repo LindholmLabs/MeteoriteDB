@@ -1,9 +1,13 @@
 package com.example.project_assignment;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -35,5 +39,14 @@ public class MainActivity extends AppCompatActivity  implements JsonTask.JsonTas
         for (Meteorite m : meteorites) {
             Log.d("Meteorite: ", m.toString());
         }
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, meteorites);
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        adapter.notifyDataSetChanged();
     }
 }
