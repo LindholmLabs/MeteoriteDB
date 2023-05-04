@@ -94,6 +94,36 @@ public class Meteorite implements Parcelable {
         return mass_double;
     }
 
+    //return the distance of the meteorite from any position.
+    public double getDistanceFrom(double userLatitude, double userLongitude) {
+        if (latitude == null) {
+            latitude = "0";
+        }
+        if (longitude == null) {
+            longitude = "0";
+        }
+
+        //1 = user
+        //2 = meteorite
+
+        double meteoriteLatitude = Double.parseDouble(this.latitude);
+        double meteoriteLongitude = Double.parseDouble(this.longitude);
+
+        final int R = 6371; // Radius of the earth
+
+        double latDistance = Math.toRadians(meteoriteLatitude - userLatitude);
+        double lonDistance = Math.toRadians(meteoriteLongitude - userLongitude);
+        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+                + Math.cos(Math.toRadians(userLatitude)) * Math.cos(Math.toRadians(meteoriteLatitude))
+                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        double distance = R * c * 1000; // convert to meters
+
+
+        return Math.sqrt(distance);
+    }
+
     public void setMass(String mass) {
         this.mass = mass;
     }
