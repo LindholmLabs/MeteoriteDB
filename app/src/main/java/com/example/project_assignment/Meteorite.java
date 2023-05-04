@@ -25,14 +25,12 @@ public class Meteorite implements Parcelable {
 
     @Override
     public String toString() {
-        return "Meteorite{" +
-                "name='" + name + '\'' +
-                ", id='" + id + '\'' +
-                ", mass='" + mass + '\'' +
-                ", date='" + date + '\'' +
-                ", latitude='" + latitude + '\'' +
-                ", longitude='" + longitude + '\'' +
-                '}';
+        return "The meteorite " + name +
+                "has a mass of " + mass + "kg " +
+                "and touched the surface of the earth at " +
+                date + "\n\n" +
+                "It landed at lat: " + latitude +
+                " long: " + longitude;
     }
     protected Meteorite(Parcel in) {
         name = in.readString();
@@ -70,5 +68,57 @@ public class Meteorite implements Parcelable {
         parcel.writeString(date);
         parcel.writeString(latitude);
         parcel.writeString(longitude);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public double getMass() {
+        if (mass == null) {
+            return 0;
+        }
+        double mass_double = Double.parseDouble(mass);
+        return mass_double;
+    }
+
+    public void setMass(String mass) {
+        this.mass = mass;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }
