@@ -11,11 +11,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import com.example.project_assignment.comparators.SortByName;
+import com.example.project_assignment.comparators.SortByWeight;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("FieldCanBeLocal")
@@ -37,6 +41,8 @@ public class MainActivity extends AppCompatActivity  implements JsonTask.JsonTas
 
         Type type = new TypeToken<List<Meteorite>>() {}.getType();
         ArrayList<Meteorite> meteorites = gson.fromJson(json, type);
+
+        Collections.sort(meteorites, new SortByWeight());
 
         for (Meteorite m : meteorites) {
             Log.d("Meteorite: ", m.toString());
