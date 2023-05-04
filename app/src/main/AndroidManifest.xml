@@ -15,7 +15,7 @@
         android:theme="@style/Theme.Projectassignment"
         tools:targetApi="31">
         <activity
-            android:name=".meteorite_activity"
+            android:name=".MeteoriteActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
