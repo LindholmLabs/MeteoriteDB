@@ -23,7 +23,6 @@ public class SortByLocation implements Comparator<Meteorite> {
     }
     @Override
     public int compare(Meteorite m1, Meteorite m2) {
-        System.out.println(latitude + ":" + longitude);
         return Double.compare(m1.getDistanceFrom(latitude, longitude), m2.getDistanceFrom(latitude, longitude));
     }
 }

@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        System.out.println("LATITUDE = " + location.getLatitude());
 
         preferenceEditor.putString("latitude", String.valueOf(location.getLatitude()));
         preferenceEditor.putString("longitude", String.valueOf(location.getLongitude()));
