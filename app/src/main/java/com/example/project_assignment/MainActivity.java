@@ -16,10 +16,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.project_assignment.comparators.SortByLocation;
+import com.example.project_assignment.comparators.SortByName;
 import com.example.project_assignment.comparators.SortByWeight;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -63,6 +66,49 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+        FloatingActionButton showSortingOptionsButton = findViewById(R.id.showSortingOptionsButton);
+        FloatingActionButton locationSortButton = findViewById(R.id.locationSortButton);
+        FloatingActionButton nameSortButton = findViewById(R.id.nameSortButton);
+        FloatingActionButton masSortButton = findViewById(R.id.masSortButton);
+        showSortingOptionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (locationSortButton.getVisibility() == View.VISIBLE) {
+                    locationSortButton.setVisibility(View.INVISIBLE);
+                    nameSortButton.setVisibility(View.INVISIBLE);
+                    masSortButton.setVisibility(View.INVISIBLE);
+                } else {
+                    locationSortButton.setVisibility(View.VISIBLE);
+                    nameSortButton.setVisibility(View.VISIBLE);
+                    masSortButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        locationSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Collections.sort(meteorites, new SortByLocation(MainActivity.this));
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        nameSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Collections.sort(meteorites, new SortByName());
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        masSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Collections.sort(meteorites, new SortByWeight());
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -94,9 +140,6 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         preferenceEditor.putString("latitude", String.valueOf(location.getLatitude()));
         preferenceEditor.putString("longitude", String.valueOf(location.getLongitude()));
         preferenceEditor.apply();
-
-        Collections.sort(meteorites, new SortByLocation(MainActivity.this));
-        adapter.notifyDataSetChanged();
     }
 }
 
