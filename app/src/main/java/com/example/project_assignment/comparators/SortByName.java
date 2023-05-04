@@ -8,6 +8,6 @@ public class SortByName implements Comparator<Meteorite> {
 
     @Override
     public int compare(Meteorite m1, Meteorite m2) {
-        return m2.getName().toLowerCase().compareTo(m2.getName().toLowerCase());
+        return m1.getName().toLowerCase().compareTo(m2.getName().toLowerCase());
     }
 }
