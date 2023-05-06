@@ -4,6 +4,7 @@ import android.Manifest;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,12 +17,16 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.PopupWindow;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.project_assignment.comparators.SortByLocation;
 import com.example.project_assignment.comparators.SortByName;
-import com.example.project_assignment.comparators.SortByWeight;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -105,8 +110,9 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         masSortButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Collections.sort(meteorites, new SortByWeight());
-                adapter.notifyDataSetChanged();
+                showFilterOptions(findViewById(android.R.id.content));
+                //Collections.sort(meteorites, new SortByWeight());
+                //adapter.notifyDataSetChanged();
             }
         });
     }
@@ -132,6 +138,40 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         adapter.notifyDataSetChanged();
+    }
+
+    private void showFilterOptions(View view) {
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.filter_popup, null);
+
+        int width = ConstraintLayout.LayoutParams.MATCH_PARENT;
+        int height = ConstraintLayout.LayoutParams.MATCH_PARENT;
+        boolean focusable = false; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+        TextView distanceProgress = popupView.findViewById(R.id.distanceProgress);
+
+        SeekBar seekBar = popupView.findViewById(R.id.distanceBar);
+        seekBar.setMax(10000); //set max value of seekbar to 20000km
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                distanceProgress.setText(seekBar.getProgress() + "km");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     @Override
