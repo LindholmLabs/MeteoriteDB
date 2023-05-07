@@ -124,6 +124,36 @@ public class Meteorite implements Parcelable {
         return Math.sqrt(distance);
     }
 
+    public boolean matchingFilter(int minMass, int maxMass, int minYear, int maxYear, int maxDistance, double userLat, double userLong) {
+        //filter mass
+        if (mass != null) {
+            int tempMass = Integer.parseInt(mass);
+            if (tempMass < minMass) {
+                return false;
+            }
+            if (tempMass > maxMass) {
+                return false;
+            }
+        }
+        //filter year the meteorite fell.
+        if (date != null) {
+            int year = Integer.parseInt(date.substring(0, 3));
+            if (year < minYear) {
+                return false;
+            }
+            if (year > maxYear) {
+                return false;
+            }
+        }
+
+        double metersFromUser = getDistanceFrom(userLat, userLong);
+        if (metersFromUser < maxDistance) {
+            return false;
+        }
+
+        return true;
+    }
+
     public void setMass(String mass) {
         this.mass = mass;
     }
