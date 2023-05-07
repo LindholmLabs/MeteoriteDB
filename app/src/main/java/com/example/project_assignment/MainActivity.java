@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -147,12 +148,38 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
 
         int width = ConstraintLayout.LayoutParams.MATCH_PARENT;
         int height = ConstraintLayout.LayoutParams.MATCH_PARENT;
-        boolean focusable = false; // lets taps outside the popup also dismiss it
+        boolean focusable = true;
         final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
 
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
         TextView distanceProgress = popupView.findViewById(R.id.distanceProgress);
+
+        Button confirmButton = popupView.findViewById(R.id.confirmFilterButton);
+        Button cancelButton = popupView.findViewById(R.id.cancelFilterButton);
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                popupWindow.dismiss();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                popupWindow.dismiss();
+            }
+        });
 
         SeekBar seekBar = popupView.findViewById(R.id.distanceBar);
         seekBar.setMax(10000); //set max value of seekbar to 20000km
@@ -174,12 +201,16 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         });
     }
 
+
+
     @Override
     public void onLocationChanged(@NonNull Location location) {
 
         preferenceEditor.putString("latitude", String.valueOf(location.getLatitude()));
         preferenceEditor.putString("longitude", String.valueOf(location.getLongitude()));
         preferenceEditor.apply();
+
+
     }
 }
 
