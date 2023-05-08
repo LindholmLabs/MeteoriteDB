@@ -73,14 +73,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="18dp"
-                    android:text="Maximum Mass:"
+                    android:text="Minimum Mass:"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/editTextNumber7"
+                    android:id="@+id/setMinimumMass"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -98,15 +98,15 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="24dp"
                     android:layout_marginBottom="10dp"
-                    android:text="Minimum Mass:"
-                    app:layout_constraintBottom_toBottomOf="@+id/editTextNumber8"
+                    android:text="Maximum Mass:"
+                    app:layout_constraintBottom_toBottomOf="@+id/setMaximumMass"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
                 <EditText
-                    android:id="@+id/editTextNumber8"
+                    android:id="@+id/setMaximumMass"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
@@ -115,11 +115,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/textView13"
-                    app:layout_constraintStart_toStartOf="@+id/editTextNumber7"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextNumber7" />
+                    app:layout_constraintStart_toStartOf="@+id/setMinimumMass"
+                    app:layout_constraintTop_toBottomOf="@+id/setMinimumMass" />
 
                 <EditText
-                    android:id="@+id/editTextNumber9"
+                    android:id="@+id/setMinimumYear"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
@@ -127,8 +127,8 @@
                     android:inputType="number"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/textView14"
-                    app:layout_constraintStart_toStartOf="@+id/editTextNumber7"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextNumber8" />
+                    app:layout_constraintStart_toStartOf="@+id/setMinimumMass"
+                    app:layout_constraintTop_toBottomOf="@+id/setMaximumMass" />
 
                 <TextView
                     android:id="@+id/textView14"
@@ -138,7 +138,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="10dp"
                     android:text="Year from:"
-                    app:layout_constraintBottom_toBottomOf="@+id/editTextNumber9"
+                    app:layout_constraintBottom_toBottomOf="@+id/setMinimumYear"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -153,22 +153,22 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="10dp"
                     android:text="Year to:"
-                    app:layout_constraintBottom_toBottomOf="@+id/editTextNumber11"
+                    app:layout_constraintBottom_toBottomOf="@+id/setMaximumYear"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
                 <EditText
-                    android:id="@+id/editTextNumber11"
+                    android:id="@+id/setMaximumYear"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
                     android:ems="10"
                     android:inputType="number"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/editTextNumber7"
-                    app:layout_constraintTop_toBottomOf="@+id/editTextNumber9" />
+                    app:layout_constraintStart_toStartOf="@+id/setMinimumMass"
+                    app:layout_constraintTop_toBottomOf="@+id/setMinimumYear" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
