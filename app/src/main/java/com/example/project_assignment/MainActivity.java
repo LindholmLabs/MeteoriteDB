@@ -21,7 +21,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.PopupWindow;
+import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,8 +48,11 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
     private SharedPreferences.Editor preferenceEditor;
 
     private ArrayList<Meteorite> meteorites;
+    private ArrayList<Meteorite> unalteredMeteoriteList;
 
     private RecyclerViewAdapter adapter;
+
+    private boolean distanceSet = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         locationSortButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Collections.sort(meteorites, new SortByLocation(MainActivity.this));
+                Collections.sort(meteorites, new SortByLocation());
                 adapter.notifyDataSetChanged();
             }
         });
@@ -124,8 +129,7 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
 
         Type type = new TypeToken<List<Meteorite>>() {}.getType();
         meteorites = gson.fromJson(json, type);
-
-
+        unalteredMeteoriteList = meteorites;
 
         for (Meteorite m : meteorites) {
             Log.d("Meteorite: ", m.toString());
@@ -142,6 +146,8 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
     }
 
     private void showFilterOptions(View view) {
+
+        //initialize layoutInflater
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.filter_popup, null);
@@ -150,16 +156,66 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         int height = ConstraintLayout.LayoutParams.MATCH_PARENT;
         boolean focusable = true;
         final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
-
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
+        //fetch all necessary views and widgets in popup.
         TextView distanceProgress = popupView.findViewById(R.id.distanceProgress);
-
         Button confirmButton = popupView.findViewById(R.id.confirmFilterButton);
         Button cancelButton = popupView.findViewById(R.id.cancelFilterButton);
+        SeekBar seekBar = popupView.findViewById(R.id.distanceBar);
+        EditText minMass = popupView.findViewById(R.id.setMinimumMass);
+        EditText maxMass = popupView.findViewById(R.id.setMaximumMass);
+        EditText minYear = popupView.findViewById(R.id.setMinimumYear);
+        EditText maxYear = popupView.findViewById(R.id.setMaximumYear);
+        RadioGroup sorting = popupView.findViewById(R.id.sortingGroup);
+
+
+
+
+
+        //set all listeners
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                meteorites = unalteredMeteoriteList;
+
+                //fetch all editText data.
+                int intMinMass = fetchEditTextData(minMass);
+                int intMaxMass = fetchEditTextData(maxMass);
+                int intMinYear = fetchEditTextData(minYear);
+                int intMaxYear = fetchEditTextData(maxYear);
+                int distance = Integer.parseInt(String.valueOf(seekBar.getProgress()));
+                int selectedSortingButton = sorting.getCheckedRadioButtonId();
+
+                ArrayList<Meteorite> toRemove = new ArrayList<Meteorite>();
+
+                for (Meteorite m : meteorites) {
+                    boolean matchingFilter = m.matchingFilter(intMinMass, intMaxMass, intMinYear, intMaxYear, distance);
+                    if (!matchingFilter) {
+                        toRemove.add(m);
+                    }
+                }
+
+                for (Meteorite m : toRemove) {
+                    meteorites.remove(m);
+                }
+
+                System.out.println(selectedSortingButton);
+                switch (selectedSortingButton) {
+                    case 0:
+                        System.out.println("Sorting based on Name!");
+                        break;
+                    case 1:
+                        System.out.println("Sorting based on Mass!");
+                        break;
+                    case 2:
+                        System.out.println("Sorting based on Location!");
+                }
+
+                adapter.notifyDataSetChanged();
+
+
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
@@ -181,7 +237,6 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
             }
         });
 
-        SeekBar seekBar = popupView.findViewById(R.id.distanceBar);
         seekBar.setMax(10000); //set max value of seekbar to 20000km
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -201,16 +256,25 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         });
     }
 
+    private int fetchEditTextData(EditText editText) {
+        int output = 0;
+        if(!String.valueOf(editText.getText()).isEmpty()) {
+            output = Integer.parseInt(String.valueOf(editText.getText()));
+            return output;
+        }
+        return output;
+    }
 
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-
-        preferenceEditor.putString("latitude", String.valueOf(location.getLatitude()));
-        preferenceEditor.putString("longitude", String.valueOf(location.getLongitude()));
-        preferenceEditor.apply();
-
-
+        if (!distanceSet) {
+            return;
+        }
+        for (Meteorite m : meteorites) {
+            m.generateDistanceFrom(location.getLatitude(), location.getLongitude());
+            distanceSet = true;
+        }
     }
 }
 
