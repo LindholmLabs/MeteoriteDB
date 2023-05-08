@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 public class Meteorite implements Parcelable {
@@ -22,6 +21,7 @@ public class Meteorite implements Parcelable {
     @SerializedName(value = "reclong", alternate = "longitude")
     protected String longitude;
 
+    private double distance;
 
     @Override
     public String toString() {
@@ -95,7 +95,7 @@ public class Meteorite implements Parcelable {
     }
 
     //return the distance of the meteorite from any position.
-    public double getDistanceFrom(double userLatitude, double userLongitude) {
+    public double generateDistanceFrom(double userLatitude, double userLongitude) {
         if (latitude == null) {
             latitude = "0";
         }
@@ -120,14 +120,23 @@ public class Meteorite implements Parcelable {
 
         double distance = R * c * 1000; // convert to meters
 
+        setDistance(Math.sqrt(distance));
 
-        return Math.sqrt(distance);
+        return this.distance;
     }
 
-    public boolean matchingFilter(int minMass, int maxMass, int minYear, int maxYear, int maxDistance, double userLat, double userLong) {
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
+    public double getDistance() {
+        return this.distance;
+    }
+
+    public boolean matchingFilter(int minMass, int maxMass, int minYear, int maxYear, int maxDistance) {
         //filter mass
         if (mass != null) {
-            int tempMass = Integer.parseInt(mass);
+            double tempMass = Double.parseDouble(mass);
             if (tempMass < minMass) {
                 return false;
             }
@@ -146,8 +155,7 @@ public class Meteorite implements Parcelable {
             }
         }
 
-        double metersFromUser = getDistanceFrom(userLat, userLong);
-        if (metersFromUser < maxDistance) {
+        if (distance < maxDistance) {
             return false;
         }
 
