@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <permission
         android:name="com.anchit.locationapi.maps.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
@@ -19,7 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Projectassignment"
         tools:targetApi="31">
-
+        <activity
+            android:name=".AboutActivity"
+            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -33,7 +36,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="" />
+            android:value="AIzaSyB8HryshaDIpHlZ-7cwlzNAzwsXpkdaFwM" />
 
         <activity
             android:name=".MeteoriteActivity"
