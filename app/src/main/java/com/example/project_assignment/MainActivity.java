@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
             Log.d("Meteorite: ", m.toString());
         }
 
+
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
         adapter = new RecyclerViewAdapter(this, meteorites);
@@ -165,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
                     }
                 }
 
+
                 //remove meteorites that did not match the filter settings.
                 for (Meteorite m : toRemove) {
                     meteorites.remove(m);
@@ -173,16 +175,24 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
                 switch (selectedSortingButton) {
                     case R.id.radioButtonSortLocation:
                         Collections.sort(meteorites, new SortByLocation());
-                        System.out.println("sorting location");
+                        preferenceEditor.putString("sort", "location");
                         break;
                     case R.id.radioButtonSortWeight:
                         Collections.sort(meteorites, new SortByWeight());
-                        System.out.println("Sort by mass");
+                        preferenceEditor.putString("sort", "mass");
                         break;
                     default:
                         Collections.sort(meteorites, new SortByName());
-                        System.out.println("sort by name");
+                        preferenceEditor.putString("name", "name");
                 }
+
+                //save filter options.
+                preferenceEditor.putInt("minMass", intMinMass);
+                preferenceEditor.putInt("maxMass", intMaxMass);
+                preferenceEditor.putInt("minYear", intMinYear);
+                preferenceEditor.putInt("maxYear", intMaxYear);
+                preferenceEditor.putInt("distance", distance);
+                preferenceEditor.apply();
 
 
                 adapter.notifyDataSetChanged();
@@ -245,6 +255,44 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         for (Meteorite m : meteorites) {
             m.generateDistanceFrom(location.getLatitude(), location.getLongitude());
             distanceSet = true;
+        }
+        filterMeteorites();
+    }
+
+    public void filterMeteorites() {
+        //if there are saved filter settings, load them.
+        if (preference.contains("minMass")) {
+            Toast.makeText(MainActivity.this, "Loaded stored filter", Toast.LENGTH_SHORT).show();
+            ArrayList<Meteorite> toRemove = new ArrayList<>();
+
+            for (Meteorite m : meteorites) {
+                boolean matchingFilter = m.matchingFilter(
+                        preference.getInt("minMass", 0),
+                        preference.getInt("maxMass", 0),
+                        preference.getInt("minYear", 0),
+                        preference.getInt("maxYear", 0),
+                        preference.getInt("distance", 0)
+                );
+                if (!matchingFilter) {
+                    toRemove.add(m);
+                }
+            }
+            //remove meteorites that did not match the filter settings.
+            for (Meteorite m : toRemove) {
+                meteorites.remove(m);
+            }
+
+            switch (preference.getString("sort", "")) {
+                case "location":
+                    Collections.sort(meteorites, new SortByLocation());
+                    break;
+                case "mass":
+                    Collections.sort(meteorites, new SortByWeight());
+                    break;
+                default:
+                    Collections.sort(meteorites, new SortByName());
+            }
+            adapter.notifyDataSetChanged();
         }
     }
 }
