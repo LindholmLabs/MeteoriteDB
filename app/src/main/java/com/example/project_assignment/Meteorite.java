@@ -30,7 +30,8 @@ public class Meteorite implements Parcelable {
                 "and touched the surface of the earth at " +
                 date + "\n\n" +
                 "It landed at lat: " + latitude +
-                " long: " + longitude;
+                " long: " + longitude +
+                " Roughly " + Math.round(distance) + "km from your location";
     }
     protected Meteorite(Parcel in) {
         name = in.readString();
@@ -39,6 +40,7 @@ public class Meteorite implements Parcelable {
         date = in.readString();
         latitude = in.readString();
         longitude = in.readString();
+        distance = in.readDouble();
     }
 
     public static final Creator<Meteorite> CREATOR = new Creator<Meteorite>() {
@@ -68,6 +70,7 @@ public class Meteorite implements Parcelable {
         parcel.writeString(date);
         parcel.writeString(latitude);
         parcel.writeString(longitude);
+        parcel.writeDouble(distance);
     }
 
     public String getName() {
@@ -121,7 +124,6 @@ public class Meteorite implements Parcelable {
         double distance = R * c * 1000; // convert to meters
 
         setDistance(Math.sqrt(distance));
-
         return this.distance;
     }
 
@@ -137,25 +139,29 @@ public class Meteorite implements Parcelable {
         //filter mass
         if (mass != null) {
             double tempMass = Double.parseDouble(mass);
-            if (tempMass < minMass) {
+            if (tempMass < minMass && minMass != 0) {
                 return false;
             }
-            if (tempMass > maxMass) {
+            if (tempMass > maxMass && maxMass != 0) {
                 return false;
             }
+        } else {
+            return false;
         }
         //filter year the meteorite fell.
         if (date != null) {
-            int year = Integer.parseInt(date.substring(0, 3));
-            if (year < minYear) {
+            int year = Integer.parseInt(date.substring(0, 4));
+            if (year < minYear && minYear != 0) {
                 return false;
             }
-            if (year > maxYear) {
+            if (year > maxYear && maxYear != 0) {
                 return false;
             }
+        } else {
+            return false;
         }
 
-        if (distance < maxDistance) {
+        if (distance > maxDistance && maxDistance != 0) {
             return false;
         }
 
