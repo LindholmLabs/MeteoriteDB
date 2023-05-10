@@ -16,6 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -30,6 +32,7 @@ import android.widget.Toast;
 
 import com.example.project_assignment.comparators.SortByLocation;
 import com.example.project_assignment.comparators.SortByName;
+import com.example.project_assignment.comparators.SortByWeight;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -79,46 +82,10 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
         FloatingActionButton showSortingOptionsButton = findViewById(R.id.showSortingOptionsButton);
-        FloatingActionButton locationSortButton = findViewById(R.id.locationSortButton);
-        FloatingActionButton nameSortButton = findViewById(R.id.nameSortButton);
-        FloatingActionButton masSortButton = findViewById(R.id.masSortButton);
         showSortingOptionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (locationSortButton.getVisibility() == View.VISIBLE) {
-                    locationSortButton.setVisibility(View.INVISIBLE);
-                    nameSortButton.setVisibility(View.INVISIBLE);
-                    masSortButton.setVisibility(View.INVISIBLE);
-                } else {
-                    locationSortButton.setVisibility(View.VISIBLE);
-                    nameSortButton.setVisibility(View.VISIBLE);
-                    masSortButton.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-
-        locationSortButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Collections.sort(meteorites, new SortByLocation());
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-        nameSortButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Collections.sort(meteorites, new SortByName());
-                adapter.notifyDataSetChanged();
-            }
-        });
-
-        masSortButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showFilterOptions(findViewById(android.R.id.content));
-                //Collections.sort(meteorites, new SortByWeight());
-                //adapter.notifyDataSetChanged();
+               showFilterOptions(view);
             }
         });
     }
@@ -129,7 +96,8 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
 
         Type type = new TypeToken<List<Meteorite>>() {}.getType();
         meteorites = gson.fromJson(json, type);
-        unalteredMeteoriteList = meteorites;
+        unalteredMeteoriteList = new ArrayList<Meteorite>();
+        unalteredMeteoriteList.addAll(meteorites);
 
         for (Meteorite m : meteorites) {
             Log.d("Meteorite: ", m.toString());
@@ -170,15 +138,14 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         RadioGroup sorting = popupView.findViewById(R.id.sortingGroup);
 
 
-
-
-
         //set all listeners
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                meteorites = unalteredMeteoriteList;
+                //reinitialize saved meteorites.
+                meteorites.clear();
+                meteorites.addAll(unalteredMeteoriteList);
 
                 //fetch all editText data.
                 int intMinMass = fetchEditTextData(minMass);
@@ -190,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
 
                 ArrayList<Meteorite> toRemove = new ArrayList<Meteorite>();
 
+                //check if meteorites match filter settings.
                 for (Meteorite m : meteorites) {
                     boolean matchingFilter = m.matchingFilter(intMinMass, intMaxMass, intMinYear, intMaxYear, distance);
                     if (!matchingFilter) {
@@ -197,24 +165,27 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
                     }
                 }
 
+                //remove meteorites that did not match the filter settings.
                 for (Meteorite m : toRemove) {
                     meteorites.remove(m);
                 }
 
-                System.out.println(selectedSortingButton);
                 switch (selectedSortingButton) {
-                    case 0:
-                        System.out.println("Sorting based on Name!");
+                    case R.id.radioButtonSortLocation:
+                        Collections.sort(meteorites, new SortByLocation());
+                        System.out.println("sorting location");
                         break;
-                    case 1:
-                        System.out.println("Sorting based on Mass!");
+                    case R.id.radioButtonSortWeight:
+                        Collections.sort(meteorites, new SortByWeight());
+                        System.out.println("Sort by mass");
                         break;
-                    case 2:
-                        System.out.println("Sorting based on Location!");
+                    default:
+                        Collections.sort(meteorites, new SortByName());
+                        System.out.println("sort by name");
                 }
 
-                adapter.notifyDataSetChanged();
 
+                adapter.notifyDataSetChanged();
 
                 try {
                     Thread.sleep(100);
@@ -268,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        if (!distanceSet) {
+        if (distanceSet) {
             return;
         }
         for (Meteorite m : meteorites) {
