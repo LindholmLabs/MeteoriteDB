@@ -1,0 +1,56 @@
+:root {
+    --bgColor: #2a2a33;
+    --textColor: azure;
+    --sectionColor: #363d47;
+}
+
+body {
+    background-color: var(--bgColor);
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    width: 70vw;
+    max-width: 900px;
+}
+
+h1, h2, p {
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--textColor);
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+a {
+    font-family: Arial, Helvetica, sans-serif;
+    color:cadetblue;
+}
+
+.stdParagraph {
+    padding: 2%;
+    background-color: var(--sectionColor);
+    text-align: justify;
+    margin: 4%;
+    border-radius: 10px;
+}
+
+.stdParagraph:last-of-type {
+    margin-bottom: 10vh;
+}
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--sectionColor); 
+}
+
+footer a {
+    margin: 2vh;
+    display: inline-flex;
+    font-size: large;
+}
