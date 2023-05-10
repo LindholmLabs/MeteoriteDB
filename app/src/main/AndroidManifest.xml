@@ -36,7 +36,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB8HryshaDIpHlZ-7cwlzNAzwsXpkdaFwM" />
+            android:value="" />
 
         <activity
             android:name=".MeteoriteActivity"
