@@ -8,13 +8,15 @@
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="#363D47"
+        android:backgroundTint="#363D47"
+        android:foreground="?android:attr/selectableItemBackground"
         android:scaleX="0.95"
         android:scaleY="0.95"
-        app:cardBackgroundColor="#E6E2E2"
+        app:cardBackgroundColor="#363D47"
         app:cardCornerRadius="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:foreground="?android:attr/selectableItemBackground"
         tools:ignore="MissingConstraints">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,6 +24,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
+            android:background="#363D47"
+            android:backgroundTint="#363D47"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5">
@@ -33,6 +37,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:text="TextView"
+                android:textColor="#F0FFFF"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/textview_meteoriteAge"
@@ -50,7 +55,7 @@
                 android:layout_marginBottom="10dp"
                 android:fontFamily="monospace"
                 android:text="TextView"
-                android:textColor="#918C8C"
+                android:textColor="#F0FFFF"
                 android:textStyle="italic"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/textview_meteoriteAge"
@@ -66,6 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
                 android:text="TextView"
+                android:textColor="#F0FFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
