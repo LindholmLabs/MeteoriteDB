@@ -33,6 +33,7 @@ public class Meteorite implements Parcelable {
                 " long: " + longitude +
                 " Roughly " + Math.round(distance) + "km from your location";
     }
+
     protected Meteorite(Parcel in) {
         name = in.readString();
         id = in.readString();
@@ -54,8 +55,6 @@ public class Meteorite implements Parcelable {
             return new Meteorite[size];
         }
     };
-
-
 
     @Override
     public int describeContents() {
