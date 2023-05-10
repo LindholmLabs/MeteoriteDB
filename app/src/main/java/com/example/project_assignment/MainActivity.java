@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -70,13 +71,10 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         //request permission to use location services: fine location and coarse location.
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             Toast.makeText(MainActivity.this, "The app needs access to location services.", Toast.LENGTH_LONG);
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
@@ -85,7 +83,16 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         showSortingOptionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               showFilterOptions(view);
+                showFilterOptions(view);
+            }
+        });
+
+        FloatingActionButton showAboutButton = findViewById(R.id.showAboutSectionButton);
+        showAboutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -94,7 +101,8 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
     public void onPostExecute(String json) {
         Gson gson = new Gson();
 
-        Type type = new TypeToken<List<Meteorite>>() {}.getType();
+        Type type = new TypeToken<List<Meteorite>>() {
+        }.getType();
         meteorites = gson.fromJson(json, type);
         unalteredMeteoriteList = new ArrayList<Meteorite>();
         unalteredMeteoriteList.addAll(meteorites);
@@ -117,8 +125,7 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
     private void showFilterOptions(View view) {
 
         //initialize layoutInflater
-        LayoutInflater inflater = (LayoutInflater)
-                getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.filter_popup, null);
 
         int width = ConstraintLayout.LayoutParams.MATCH_PARENT;
@@ -239,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
 
     private int fetchEditTextData(EditText editText) {
         int output = 0;
-        if(!String.valueOf(editText.getText()).isEmpty()) {
+        if (!String.valueOf(editText.getText()).isEmpty()) {
             output = Integer.parseInt(String.valueOf(editText.getText()));
             return output;
         }
@@ -266,13 +273,7 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
             ArrayList<Meteorite> toRemove = new ArrayList<>();
 
             for (Meteorite m : meteorites) {
-                boolean matchingFilter = m.matchingFilter(
-                        preference.getInt("minMass", 0),
-                        preference.getInt("maxMass", 0),
-                        preference.getInt("minYear", 0),
-                        preference.getInt("maxYear", 0),
-                        preference.getInt("distance", 0)
-                );
+                boolean matchingFilter = m.matchingFilter(preference.getInt("minMass", 0), preference.getInt("maxMass", 0), preference.getInt("minYear", 0), preference.getInt("maxYear", 0), preference.getInt("distance", 0));
                 if (!matchingFilter) {
                     toRemove.add(m);
                 }
