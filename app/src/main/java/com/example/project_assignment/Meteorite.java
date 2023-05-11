@@ -1,3 +1,4 @@
+
 package com.example.project_assignment;
 
 import android.os.Parcel;
@@ -5,32 +6,40 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.SerializedName;
 
 public class Meteorite implements Parcelable {
     protected String name;
+
+    @SerializedName(value = "ID", alternate = "id")
     protected String id;
+    @SerializedName(value = "size", alternate = "mass")
     protected String mass;
 
-    @SerializedName(value = "year", alternate = "date")
-    protected String date;
+    protected String location;
 
-    @SerializedName(value = "reclat", alternate = "latitude")
-    protected String latitude;
+    private String latitude;
 
-    @SerializedName(value = "reclong", alternate = "longitude")
-    protected String longitude;
+    private String date;
+
+    private String longitude;
+
+    protected JsonObject auxdata;
 
     private double distance;
 
     @Override
     public String toString() {
         return "The meteorite " + name +
-                "has a mass of " + mass + "kg " +
+                " has a mass of " + mass + "kg " +
                 "and touched the surface of the earth at " +
-                date + "\n\n" +
-                "It landed at lat: " + latitude +
-                " long: " + longitude +
+                getDate() + "\n\n" +
+                "It landed at lat: " + getLatitude() +
+                " long: " + getLongitude() +
                 " Roughly " + Math.round(distance) + "km from your location";
     }
 
@@ -39,8 +48,7 @@ public class Meteorite implements Parcelable {
         id = in.readString();
         mass = in.readString();
         date = in.readString();
-        latitude = in.readString();
-        longitude = in.readString();
+        location = in.readString();
         distance = in.readDouble();
     }
 
@@ -66,9 +74,8 @@ public class Meteorite implements Parcelable {
         parcel.writeString(name);
         parcel.writeString(id);
         parcel.writeString(mass);
-        parcel.writeString(date);
-        parcel.writeString(latitude);
-        parcel.writeString(longitude);
+        parcel.writeString(getDate());
+        parcel.writeString(location);
         parcel.writeDouble(distance);
     }
 
@@ -98,6 +105,11 @@ public class Meteorite implements Parcelable {
 
     //return the distance of the meteorite from any position.
     public double generateDistanceFrom(double userLatitude, double userLongitude) {
+
+        String latLong[] = location.split(",");
+        latitude = latLong[0];
+        longitude = latLong[1];
+
         if (latitude == null) {
             latitude = "0";
         }
@@ -136,34 +148,37 @@ public class Meteorite implements Parcelable {
 
     public boolean matchingFilter(int minMass, int maxMass, int minYear, int maxYear, int maxDistance) {
         //filter mass
-        if (mass != null) {
-            double tempMass = Double.parseDouble(mass);
-            if (tempMass < minMass && minMass != 0) {
-                return false;
-            }
-            if (tempMass > maxMass && maxMass != 0) {
-                return false;
-            }
-        } else {
+        double tempMass = Double.parseDouble(mass);
+        if (tempMass < minMass && minMass != 0) {
+            System.out.println("mass not matching filter");
+            return false;
+        }
+        if (tempMass > maxMass && maxMass != 0) {
+            System.out.println("mass not matching filter");
             return false;
         }
         //filter year the meteorite fell.
-        if (date != null) {
-            int year = Integer.parseInt(date.substring(0, 4));
+        if (getDate() != null) {
+            int year = Integer.parseInt(getDate());
             if (year < minYear && minYear != 0) {
+                System.out.println("date not matching filter");
                 return false;
             }
             if (year > maxYear && maxYear != 0) {
+                System.out.println("date not matching filter");
                 return false;
             }
         } else {
+            System.out.println("date null");
             return false;
         }
 
         if (distance > maxDistance && maxDistance != 0) {
+            System.out.println("distance not matching filter");
             return false;
         }
 
+        //if none of the filters trigger, return true
         return true;
     }
 
@@ -172,15 +187,16 @@ public class Meteorite implements Parcelable {
     }
 
     public String getDate() {
+        if (date == null) {
+            date = auxdata.get("date").getAsString().substring(0, 4);
+            return auxdata.get("date").getAsString().substring(0, 4);
+        }
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
     public String getLatitude() {
-        return latitude;
+        String latLong[] = location.split(",");
+        return latLong[0];
     }
 
     public void setLatitude(String latitude) {
@@ -188,7 +204,8 @@ public class Meteorite implements Parcelable {
     }
 
     public String getLongitude() {
-        return longitude;
+        String latLong[] = location.split(",");
+        return latLong[1];
     }
 
     public void setLongitude(String longitude) {

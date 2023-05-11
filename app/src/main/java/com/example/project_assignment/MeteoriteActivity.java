@@ -39,9 +39,9 @@ public class MeteoriteActivity extends AppCompatActivity implements OnMapReadyCa
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
-        Double.parseDouble(meteorite.latitude);
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(meteorite.latitude), Double.parseDouble(meteorite.longitude))).title("Marker"));
+        Double.parseDouble(meteorite.getLatitude());
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(meteorite.getLatitude()), Double.parseDouble(meteorite.getLongitude()))).title("Marker"));
         float zoom = 4;
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(meteorite.latitude), Double.parseDouble(meteorite.longitude)), zoom));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(meteorite.getLatitude()), Double.parseDouble(meteorite.getLongitude())), zoom));
     }
 }

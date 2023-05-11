@@ -46,7 +46,8 @@ import java.util.List;
 @SuppressWarnings("FieldCanBeLocal")
 public class MainActivity extends AppCompatActivity implements JsonTask.JsonTaskListener, LocationListener {
 
-    private final String JSON_URL = "https://data.nasa.gov/resource/y77d-th95.json";
+    //private final String JSON_URL = "https://data.nasa.gov/resource/y77d-th95.json";
+    private final String JSON_URL = "https://mobprog.webug.se/json-api?login=a22willi";
     private LocationManager locationManager;
     private SharedPreferences preference;
     private SharedPreferences.Editor preferenceEditor;
@@ -200,7 +201,6 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
                 preferenceEditor.putInt("maxYear", intMaxYear);
                 preferenceEditor.putInt("distance", distance);
                 preferenceEditor.apply();
-
 
                 adapter.notifyDataSetChanged();
 
