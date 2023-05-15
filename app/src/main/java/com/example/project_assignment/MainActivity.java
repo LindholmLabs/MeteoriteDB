@@ -256,13 +256,13 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        if (distanceSet) {
+        if (distanceSet || meteorites.isEmpty()) {
             return;
         }
         for (Meteorite m : meteorites) {
             m.generateDistanceFrom(location.getLatitude(), location.getLongitude());
-            distanceSet = true;
         }
+        distanceSet = true;
         filterMeteorites();
     }
 
