@@ -139,12 +139,11 @@ public class Meteorite implements Parcelable {
      */
     public boolean matchingFilter(int minMass, int maxMass, int minYear, int maxYear, int maxDistance) {
         //filter mass
-        double tempMass = Double.parseDouble(mass);
-        if (tempMass < minMass && minMass != 0) {
+        if (getMass() < minMass && minMass != 0) {
             System.out.println("mass not matching filter");
             return false;
         }
-        if (tempMass > maxMass && maxMass != 0) {
+        if (getMass() > maxMass && maxMass != 0) {
             System.out.println("mass not matching filter");
             return false;
         }
@@ -208,15 +207,14 @@ public class Meteorite implements Parcelable {
 
     /**
      * To more easily handle calculations and comparisons based on mass,
-     * convert the value to double before returning.
-     * @return Double mass.
+     * convert the value to int before returning.
+     * @return Int mass.
      */
-    public double getMass() {
+    public int getMass() {
         if (mass == null) {
             return 0;
         }
-        double mass_double = Double.parseDouble(mass);
-        return mass_double;
+        return Integer.parseInt(mass);
     }
 
     public void setDistance(double distance) {
