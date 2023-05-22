@@ -17,7 +17,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,7 +24,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.PopupWindow;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -98,6 +96,11 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         });
     }
 
+    /**
+     * This function runs after JSON data has been fetched from remote database.
+     *
+     * @param json
+     */
     @Override
     public void onPostExecute(String json) {
         Gson gson = new Gson();
@@ -113,16 +116,19 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
         }
 
 
+        //Initialize recyclerview and inject meteorite data.
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-
         adapter = new RecyclerViewAdapter(this, meteorites);
-
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Open popupwindow that shows all possible filter options.
+     *
+     * @param view Current view (MainActivity)
+     */
     private void showFilterOptions(View view) {
 
         //initialize layoutInflater
@@ -173,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
                         toRemove.add(m);
                     }
                 }
-
 
                 //remove meteorites that did not match the filter settings.
                 for (Meteorite m : toRemove) {
@@ -254,24 +259,44 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
     }
 
 
+    /**
+     * Runs after location has been pulled.
+     *
+     * @param location the users current location data.
+     */
     @Override
     public void onLocationChanged(@NonNull Location location) {
+        /* Prevent meteorite locations from being recaculated each time users location changes,
+         * Or the meteorites have not yet been fetched from database. */
         if (distanceSet || meteorites.isEmpty()) {
             return;
         }
+
+        Toast.makeText(this, "Loaded location", Toast.LENGTH_SHORT).show();
+
         for (Meteorite m : meteorites) {
             m.generateDistanceFrom(location.getLatitude(), location.getLongitude());
         }
+
         distanceSet = true;
+
+        //apply stored filter settings.
         filterMeteorites();
     }
 
+    /**
+     * Used to filter meteorites based on their mass, date and relative location to the user.
+     */
     public void filterMeteorites() {
         //if there are saved filter settings, load them.
         if (preference.contains("minMass")) {
             Toast.makeText(MainActivity.this, "Loaded stored filter", Toast.LENGTH_SHORT).show();
             ArrayList<Meteorite> toRemove = new ArrayList<>();
 
+            /*
+            Since the list which is being iterated through cannot be changed during its iterations.
+            Append all meteorites which are to be removed to a new list.
+             */
             for (Meteorite m : meteorites) {
                 boolean matchingFilter = m.matchingFilter(preference.getInt("minMass", 0), preference.getInt("maxMass", 0), preference.getInt("minYear", 0), preference.getInt("maxYear", 0), preference.getInt("distance", 0));
                 if (!matchingFilter) {
@@ -283,6 +308,7 @@ public class MainActivity extends AppCompatActivity implements JsonTask.JsonTask
                 meteorites.remove(m);
             }
 
+            //sort the meteories based on the users preferred sorting method.
             switch (preference.getString("sort", "")) {
                 case "location":
                     Collections.sort(meteorites, new SortByLocation());

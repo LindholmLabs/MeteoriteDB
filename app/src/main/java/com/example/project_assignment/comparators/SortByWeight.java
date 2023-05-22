@@ -11,8 +11,7 @@ public class SortByWeight implements Comparator<Meteorite> {
         //place null values last.
         if (m1.getMass() == 0) {
             return 1;
-        }
-        else if (m2.getMass() == 0) {
+        } else if (m2.getMass() == 0) {
             return -1;
         } else if (m1.getMass() == 0 && m2.getMass() == 0) {
             return 0;

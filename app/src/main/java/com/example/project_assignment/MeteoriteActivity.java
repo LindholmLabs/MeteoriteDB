@@ -24,19 +24,24 @@ public class MeteoriteActivity extends AppCompatActivity implements OnMapReadyCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meteorite);
 
+        // fetch all data sent using the intent.
         Intent intent = getIntent();
+        // unpack getParcelableExtra
         meteorite = (Meteorite) intent.getParcelableExtra("meteorite");
 
         TextView title = findViewById(R.id.textview_meteoriteTitle);
         TextView info = findViewById(R.id.textview_meteoriteInfo);
 
         title.setText(meteorite.name);
-        info.setText(meteorite.toString());
+        info.setText(meteorite.getDescription());
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
     }
 
+    /**
+     * Initialize a google maps mapview, and set the location and marker to the meteorites location.
+     */
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         Double.parseDouble(meteorite.getLatitude());
