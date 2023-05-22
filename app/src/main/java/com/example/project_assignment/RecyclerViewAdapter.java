@@ -35,8 +35,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapter.MyViewHolder holder, int position) {
-        holder.meteoriteName.setText(meteorites.get(position).name);
-        holder.meteoriteMass.setText(meteorites.get(position).mass + "kg");
+        holder.meteoriteName.setText(meteorites.get(position).getName());
+        holder.meteoriteMass.setText(meteorites.get(position).getMass() + "kg");
         holder.MeteoriteAge.setText(meteorites.get(position).getDate());
     }
 
