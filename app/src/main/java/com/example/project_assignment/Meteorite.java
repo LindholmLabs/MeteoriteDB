@@ -10,20 +10,20 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 public class Meteorite implements Parcelable {
-    protected String name;
+    private final String name;
 
     @SerializedName(value = "ID", alternate = "id")
-    protected String id;
+    private final String id;
     @SerializedName(value = "size", alternate = "mass")
-    protected String mass;
+    private final String mass;
 
-    protected String category;
+    private final String category;
 
-    protected String location;
+    private String location;
 
-    private String date;
+    private final String date;
 
-    protected JsonObject auxdata;
+    private JsonObject auxdata;
 
     private double distance;
 
@@ -179,7 +179,6 @@ public class Meteorite implements Parcelable {
      */
     public String getDate() {
         if (date == null) {
-            date = auxdata.get("date").getAsString().substring(0, 4);
             return auxdata.get("date").getAsString().substring(0, 4);
         }
         return date;
@@ -229,15 +228,7 @@ public class Meteorite implements Parcelable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }

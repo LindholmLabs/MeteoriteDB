@@ -32,7 +32,7 @@ public class MeteoriteActivity extends AppCompatActivity implements OnMapReadyCa
         TextView title = findViewById(R.id.textview_meteoriteTitle);
         TextView info = findViewById(R.id.textview_meteoriteInfo);
 
-        title.setText(meteorite.name);
+        title.setText(meteorite.getName());
         info.setText(meteorite.getDescription());
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapFragment);
