@@ -1,4 +1,4 @@
-![](app/src/main/assets/logo.png)
+![App logo](Media/logo.png)
 
 Meteorite DB är en androidapp skapad i Android studio med Java som slutprojekt i kursen
 Webbutveckling - Programmering av mobila applikationer (IT396G) vid Högskolan i Skövde.
@@ -13,4 +13,4 @@ Webbutveckling - Programmering av mobila applikationer (IT396G) vid Högskolan i
 - Snyggt mörkt tema med gula accenter.
 
 **Se resultatet av appen nedan:**
-![](Media/MeteoriteDBKollage.png)
+![App collage of features](Media/MeteoriteDBKollage.png)
